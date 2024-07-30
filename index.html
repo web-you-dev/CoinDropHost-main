@@ -173,7 +173,6 @@
           console.log('User tg ID:', userId);
           if (MyGameInstance) {
             console.log('Unity Instance is available.');
-            MyGameInstance.SendMessage("TgApi", "GetId", userId);
           } else {
             console.error('MyGameInstance is not initialized.');
           }
@@ -191,6 +190,7 @@
     }
 
     document.body.appendChild(script);
+    
     function adStatusCallback(status) {
         // 'ad-blocker' = обнаружен блокировщик рекламы
         // 'network-error' = сетевое соединение недоступно
