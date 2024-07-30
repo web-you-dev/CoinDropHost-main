@@ -13,6 +13,17 @@
       position: absolute;
       z-index: 1000;
   }
+  div#applixir_vanishing_div {
+      position: absolute;
+      z-index: 99;
+      width: 100%;
+      height: 100%;
+  }
+  iframe#applixir_parent {
+      width: 100%;
+      gap: 1;
+      height: 100%;
+  }
     html, body {
       margin: 0;
       padding: 0;
@@ -206,6 +217,7 @@
         adStatusCb: adStatusCallback,
     };
     showRewardAdButton.onClick = () =>{ invokeApplixirVideoUnit(options);}
+    // https://support.applixir.com/hc/en-us/articles/360053188354-Media-Player-Options
   </script>
 </body>
 </html>
