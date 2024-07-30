@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
-  <script type="text/javascript" src="https://cdn.applixir.com/applixir.sdk3.0m.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.applixir.com/applixir.sdk3.0m.js"></script> -->
   <style>
     #showRewardAdButton {
       position: absolute;
@@ -89,10 +89,10 @@
   </style>
 </head>
 <body>
-  <button type="button" id="showRewardAdButton">press to invoke</button>
+  <!-- <button type="button" id="showRewardAdButton">press to invoke</button>
   <div id="applixir_vanishing_div" hidden>
       <iframe id="applixir_parent" allow="autoplay"></iframe>
-  </div>
+  </div> -->
   <div id="unity-container" class="unity-desktop">
     <canvas id="unity-canvas" tabindex="-1"></canvas>
     <div id="custom-loading-bar">
@@ -190,33 +190,33 @@
     }
 
     document.body.appendChild(script);
-    
-    function adStatusCallback(status) {
-        // 'ad-blocker' = обнаружен блокировщик рекламы
-        // 'network-error' = сетевое соединение недоступно
-        // 'cors-error' = ошибка кросс-оригинальности (попробуйте очистить кэш браузера)
-        // 'no-zoneId' = отсутствует необходимое значение zoneId
-        // 'ad-watched' = реклама была показана и шла более 5 секунд
-        // 'ad-interrupted' = объявление было прервано до истечения 5 секунд (ненормальное завершение)
-        // 'ads-unavailable' = ни одно объявление не было возвращено игроку
 
-        if (status){
-            console.log('Applixir status: ' + status);
-            MyGameInstance.SendMessage("AdsBridge","ReceiveCallback", status);
-        }
-    }
+    // function adStatusCallback(status) {
+    //     // 'ad-blocker' = обнаружен блокировщик рекламы
+    //     // 'network-error' = сетевое соединение недоступно
+    //     // 'cors-error' = ошибка кросс-оригинальности (попробуйте очистить кэш браузера)
+    //     // 'no-zoneId' = отсутствует необходимое значение zoneId
+    //     // 'ad-watched' = реклама была показана и шла более 5 секунд
+    //     // 'ad-interrupted' = объявление было прервано до истечения 5 секунд (ненормальное завершение)
+    //     // 'ads-unavailable' = ни одно объявление не было возвращено игроку
 
-    var options = {
-        zoneId: 2050,
-        accountId: 8302,
-        userId: "9f3d7ed9-4514-44ef-beb1-6f6df1041741",
-        dMode: 0, // 0 for no MD5 checksum, 1 for MD5 checksum (recommended)
-        fallback: 0, // 0 for no fallbacks, 1 will show fallback ads when ads-unavailable
-        verbosity: 100,
-        // custom: nnnn, // optional: custom value for RMS - use to provide additional reward information
-        adStatusCb: adStatusCallback,
-    };
-    showRewardAdButton.onClick = () =>{ invokeApplixirVideoUnit(options);}
+    //     if (status){
+    //         console.log('Applixir status: ' + status);
+    //         MyGameInstance.SendMessage("AdsBridge","ReceiveCallback", status);
+    //     }
+    // }
+
+    // var options = {
+    //     zoneId: 2050,
+    //     accountId: 8302,
+    //     userId: "9f3d7ed9-4514-44ef-beb1-6f6df1041741",
+    //     dMode: 0, // 0 for no MD5 checksum, 1 for MD5 checksum (recommended)
+    //     fallback: 0, // 0 for no fallbacks, 1 will show fallback ads when ads-unavailable
+    //     verbosity: 100,
+    //     // custom: nnnn, // optional: custom value for RMS - use to provide additional reward information
+    //     adStatusCb: adStatusCallback,
+    // };
+    // showRewardAdButton.onClick = () =>{ invokeApplixirVideoUnit(options);}
     // https://support.applixir.com/hc/en-us/articles/360053188354-Media-Player-Options
   </script>
 </body>
