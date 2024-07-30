@@ -9,6 +9,10 @@
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
   <script type="text/javascript" src="https://cdn.applixir.com/applixir.sdk3.0m.js"></script>
   <style>
+    #showRewardAdButton {
+      position: absolute;
+      z-index: 1000;
+  }
     html, body {
       margin: 0;
       padding: 0;
@@ -74,7 +78,7 @@
   </style>
 </head>
 <body>
-  <input type="button" value="press to invoke" onclick="watchit()">
+  <button type="button" id="showRewardAdButton">press to invoke</button>
   <div id="applixir_vanishing_div" hidden>
       <iframe id="applixir_parent" allow="autoplay"></iframe>
   </div>
@@ -96,7 +100,7 @@
     var canvas = document.querySelector("#unity-canvas");
     var customLoadingBar = document.querySelector("#custom-loading-bar");
     var warningBanner = document.querySelector("#unity-warning");
-
+    
     function unityShowBanner(msg, type) {
       function updateBannerVisibility() {
         warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -187,7 +191,7 @@
 
         if (status){
             console.log('Applixir status: ' + status);
-            MyGameInstance.SendMessage("Ads", "status", status);
+            MyGameInstance.SendMessage("AdsBridge","ReceiveCallback", status);
         }
     }
 
@@ -201,9 +205,7 @@
         // custom: nnnn, // optional: custom value for RMS - use to provide additional reward information
         adStatusCb: adStatusCallback,
     };
-    function watchit() {
-      invokeApplixirVideoUnit(options);
-    }
+    showRewardAdButton.onClick = () =>{ invokeApplixirVideoUnit(options);}
   </script>
 </body>
 </html>
