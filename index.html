@@ -1,155 +1,209 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | CoinDrop</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | CoinDrop</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+  <!-- <script type="text/javascript" src="https://cdn.applixir.com/applixir.sdk3.0m.js"></script> -->
+  <style>
+    #showRewardAdButton {
+      position: absolute;
+      z-index: 1000;
+  }
+  div#applixir_vanishing_div {
+      position: absolute;
+      z-index: 99;
+      width: 100%;
+      height: 100%;
+  }
+  iframe#applixir_parent {
+      width: 100%;
+      gap: 1;
+      height: 100%;
+  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #unity-footer {
+      display: none;
+    }
+    #unity-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    #custom-loading-bar {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      flex-direction: column;
+    }
+    #custom-logo {
+      width: 100%;
+      height: 100%;
+      background: url('./source/bg.jpg') no-repeat center center;
+      background-size: contain;
+    }
+
+    @keyframes loader {
+      0%{
+        transform: rotate(0deg);
+      } 50%{
+        transform: rotate(180deg);
+      } 100%{
+        transform: rotate(360deg);
       }
-      #unity-footer {
-        display: none;
-      }
-      #unity-container {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #unity-canvas {
-        width: 100%;
-        height: 100%;
-        background: #000;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">CoinDrop</div>
-      </div>
+    }
+
+    #custom-spinner {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      bottom: 30px;
+      margin-top: 20px;
+      background: url('./source/loader.png') no-repeat center center;
+      animation: loader 0.6s linear infinite;
+      background-size: contain;
+    }
+  </style>
+</head>
+<body>
+  <!-- <button type="button" id="showRewardAdButton">press to invoke</button>
+  <div id="applixir_vanishing_div" hidden>
+      <iframe id="applixir_parent" allow="autoplay"></iframe>
+  </div> -->
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="custom-loading-bar">
+      <div id="custom-logo"></div>
+      <div id="custom-spinner"></div>
     </div>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
+    <div id="unity-warning"> </div>
+    <div id="unity-footer">
+      <div id="unity-build-title">CoinDrop</div>
+    </div>
+  </div>
+  <!-- <script type='text/javascript' src="https://cdn.applixir.com/applixir.sdk3.0m.js"></script> -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var warningBanner = document.querySelector("#unity-warning");
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
+    // Shows a temporary message banner/ribbon for a few seconds, or
+    // a permanent error message on top of the canvas if type=='error'.
+    // If type=='warning', a yellow highlight color is used.
+    // Modify or remove this function to customize the visually presented
+    // way that non-critical warnings and error messages are presented to the
+    // user.
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
       }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/CoinDropHost.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/CoinDropHost.data",
-        frameworkUrl: buildUrl + "/CoinDropHost.framework.js",
-        codeUrl: buildUrl + "/CoinDropHost.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "ETO",
-        productName: "CoinDrop",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-      } else {
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        setTimeout(function() {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
       }
+      updateBannerVisibility();
+    }
 
-      loadingBar.style.display = "block";
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/CoinDropHost.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/CoinDropHost.data",
+      frameworkUrl: buildUrl + "/CoinDropHost.framework.js",
+      codeUrl: buildUrl + "/CoinDropHost.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "ETO",
+      productName: "CoinDrop",
+      productVersion: "1.0",
+      showBanner: unityShowBanner,
+    };
 
-      var MyGameInstance = null;
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          MyGameInstance = unityInstance;
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            fullscreenButton.click();
-            unityInstance.SetFullscreen(1);
-          };
-          // Telegram WebApp API integration
-          let tg = window.Telegram.WebApp;
-          tg.expand();
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      container.className = "unity-mobile";
+      canvas.className = "unity-mobile";
+    } else {
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+    }
 
-          if (tg) {
-            console.log('Telegram WebApp API is available.');
-            const userId = tg.initDataUnsafe.user.id.toString();
-            console.log('User tg ID:', userId);
-            if (MyGameInstance) {
-              console.log('Unity Instance is available.');
-              MyGameInstance.SendMessage("TgApi", "GetId", userId);
-            } else {
-              console.error('MyGameInstance is not initialized.');
-            }
+    loadingBar.style.display = "block";
+
+    var MyGameInstance = null;
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
+        MyGameInstance = unityInstance;
+        loadingBar.style.display = "none";
+        fullscreenButton.onclick = () => {
+          fullscreenButton.click();
+          unityInstance.SetFullscreen(1);
+        };
+        // Telegram WebApp API integration
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        if (tg) {
+          console.log('Telegram WebApp API is available.');
+          const userId = tg.initDataUnsafe.user.id.toString();
+          console.log('User tg ID:', userId);
+          if (MyGameInstance) {
+            console.log('Unity Instance is available.');
+            MyGameInstance.SendMessage("TgApi", "GetId", userId);
           } else {
-            console.error('Telegram WebApp API is not available.');
+            console.error('MyGameInstance is not initialized.');
           }
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
+        } else {
+          console.error('Telegram WebApp API is not available.');
+        }
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
 
-      function openURL(url) {
-        window.location.href = url;
-      }
+    function openURL(url) {
+      window.location.href = url;
+    }
 
-      document.body.appendChild(script);
-      document.querySelector('#unity-fullscreen-button').click();
-    </script>
-  </body>
+    document.body.appendChild(script);
+    document.querySelector('#unity-fullscreen-button').click();
+  </script>
+</body>
 </html>
