@@ -90,7 +90,8 @@
     var canvas = document.querySelector("#unity-canvas");
     var customLoadingBar = document.querySelector("#custom-loading-bar");
     var warningBanner = document.querySelector("#unity-warning");
-
+    let teg = window.Telegram.WebApp;
+    teg.expand();
     function unityShowBanner(msg, type) {
       function updateBannerVisibility() {
         warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
