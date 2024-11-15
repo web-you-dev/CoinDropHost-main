@@ -44,5 +44,9 @@
     "regular": "Regular - 10000",
     "premium": "Premium - 30000",
     "available": "available",
-     "squad_button": "Comming soon..."
+     "squad_button": "Comming soon...",
+     "purchased":"Purchased",
+     "not_purchased":"Not purchased",
+     "select": "Select",
+     "active": "Active"
 }

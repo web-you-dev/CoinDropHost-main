@@ -44,5 +44,9 @@
      "regular": "Обычные - 10000",
      "premium": "Премиум - 30000",
      "available": "доступно",
-     "squad_button": "Скоро..."
+     "squad_button": "Скоро...",
+     "purchased": "Приобретено",
+     "not_purchased": "Приобретено",
+     "select": "Выбрать",
+     "active": "Активно"
 }
