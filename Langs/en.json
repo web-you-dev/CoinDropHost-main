@@ -37,5 +37,7 @@
     "faq": "FAQ",
     "earns": "Earns",
     "boost": "Boost",
-    "turn_on": "Turn On"
+    "turn_on": "Turn On",
+    "copy_link":"Copy the link below to get started",
+    "invite_description": "You've already invited:"
 }
