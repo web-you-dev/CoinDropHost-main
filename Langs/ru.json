@@ -48,5 +48,8 @@
      "purchased": "Приобретено",
      "not_purchased": "Приобретено",
      "select": "Выбрать",
-     "active": "Активно"
+     "active": "Активно",
+     "hours_left":"часов осталось",
+     "hours": "часов",
+      "min_left": "минут"
 }

@@ -48,5 +48,8 @@
      "purchased":"Purchased",
      "not_purchased":"Not purchased",
      "select": "Select",
-     "active": "Active"
+     "active": "Active",
+     "hours_left":" hours left",
+      "hours": "hours",
+      "min_left": "min left to reward"
 }
