@@ -206,6 +206,17 @@
           } else {
             console.error('MyGameInstance is not initialized.');
           }
+        
+          tg.onEvent('activated', function() {
+          console.log('WebApp is activated or restored!');
+        
+          if (MyGameInstance) {
+          MyGameInstance.SendMessage("VisibilityChangeHandler", "CheckVisibility");
+        } else {
+          console.error('Unity instance is not initialized.');
+        }
+      });
+
         } else {
           console.error('Telegram WebApp API is not available.');
         }
